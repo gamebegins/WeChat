@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>用户列表</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		td {
+			width: 96px;
+			text-align: center;
+		}
+		.div {
+			width: 128px;
+			height: 35px;
+			background: red;
+			position: fixed;
+			top: 0px;
+			left: 584px;
+			text-align: center;
+			line-height: 35px;
+			display: none;
+		}
+	</style>
+	<script type="text/javascript" src="ajax.js"></script>
+</head>
+<body>
+	<div id="div" class="div" style="color:green;">发送成功</div>
+	<h1>消息群发<span style="color:red;">(每天可发3次)</span></h1><hr>
+	群发内容：<input type="text" id="qunfa">
+	<button id="fs">发送</button><hr>
+
+	<table  border="1" align="center" style="margin:0 auto;width: 520px;">
+		<caption>用户管理</caption>
+		<tr>
+			<td>头像</td>
+			<td>微信名</td>
+			<td>关注时间</td>
+			<td>用户所在地</td>
+			<td>操作</td>
+		</tr>
+	</table>
+	<table border="1" id="table" style="margin:0 auto;width: 520px;"></table>
+	<table border="1" style="margin:0 auto;width: 520px;">
+		<tr>
+			<td><a href="">首页</a></td>
+			<td><a href="">上一页</a></td>
+			<td><a style="color:#999"></a></td>
+			<td><a href="">下一页</a></td>
+			<td><a href="">尾页</a></td>
+		</tr>
+	</table>
+	<a href="http://ai.chenjiangjiang.cn/list.html">用户管理</a>
+	<a href="http://ai.chenjiangjiang.cn/hei.html">黑名单</a>
+	<a href="http://ai.chenjiangjiang.cn/xiaoxi/message.html">消息管理</a>
+	<a href="http://ai.chenjiangjiang.cn/up/up.html">上传文件</a>
+	<!-- <h1><a href="http://ai.chenjiangjiang.cn/xiaoxi/message.html">消息管理</a></h1> -->
+</body>
+<script type="text/javascript">
+	var oTable = document.getElementById('table');
+	var aA = document.getElementsByTagName('a');
+	var oQunfa = document.getElementById('qunfa');
+	var oFs = document.getElementById('fs');
+	var oDiv = document.getElementById('div');
+
+	//消息群发
+	oFs.onclick = function()
+	{
+		var data = oQunfa.value;
+		ajax({
+			method:'post',
+			url:'qunfa.php',
+			async:false,
+			data:{xx:data},
+			success:success
+		});
+		function success(data)
+		{
+			// console.log(data);
+			oQunfa.value = '';
+			oDiv.style.display = 'block';
+			//得到div的bottom的属性
+			var top = parseInt(getStyle(oDiv, 'top'));
+			var timer = setInterval(function () {
+				top -=1
+				oDiv.style.top = top + 'px';
+				if (top == -35) {
+					oDiv.style.top = 0+'px';
+					oDiv.style.display = 'none';
+					clearInterval(timer);
+				}
+			}, 100);
+		}
+	}
+	function getStyle(obj, name)
+	{
+		return obj.currentStyle ? obj.currentStyle[name] : getComputedStyle(obj, null)[name];
+	}
+
+
+	function cha(){
+		ajax({
+			method:'get',
+			url:'list.php',
+			async:false,
+			data:{id:'1'},
+			success:success
+		});
+	}
+	function success(data)
+	{
+
+
+		oTable.innerHTML = '';
+		var obj = JSON.parse(data);
+		console.log(obj);
+		var data = obj.data;
+		for (var i = 0; i < data.length; i++) {
+			var oBsc = document.createElement('button');
+			var oTr = document.createElement('tr');
+			oBsc.innerHTML = '拉黑';
+			oBsc.style.width = 102+'px';
+			oBsc.style.height = 108+'px';
+			oBsc.id = data[i].openid;
+			oBsc.onclick = function ()
+			{
+				shan(this.id);
+			}
+			oTr.innerHTML = '<td><img style="width:100px;height:100px;" src="'+data[i].touxiang+'"></td><td>'+data[i].name+'</td><td>'+data[i].time+'</td><td>'+data[i].city+'</td>';
+			oTr.appendChild(oBsc);
+			oTable.appendChild(oTr);
+			var oPage =  obj.page;
+			console.log(oPage);
+			var oTotalPage =  obj.totalPage;
+			var shou = 1;
+			var shang = oPage-1;
+			var xia = oPage+1;
+			var wei = oTotalPage;
+			//首页添加链接
+			aA[0].href = 'javascript:test(\'list.php?page=' +shou +'\')';
+			//上一页添加链接
+			aA[1].href = 'javascript:test(\'list.php?page=' +shang +'\')';
+			//当前页信息
+			aA[2].innerHTML = '第'+oPage+'页';
+			//下一页添加链接
+			aA[3].href = 'javascript:test(\'list.php?page=' +xia +'\')';
+			//尾页添加链接
+			aA[4].href = 'javascript:test(\'list.php?page=' +wei +'\')';
+		}
+	}
+	function test(url)
+	{
+		ajax({
+			method:'get',
+			url:url,
+			async:true,
+			data:{id:'1'},
+			success:success
+		});
+	}
+cha();
+	function shan(data1)
+	{
+		console.log(data1);
+		ajax({
+			method:'get',
+			url:'lahei.php?id='+data1,
+			async:false,
+			data:{id:data1},
+			success:success
+		});
+		function success(data)
+		{
+			cha();
+		}
+	}
+</script>
+</html>

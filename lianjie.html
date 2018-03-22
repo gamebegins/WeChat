@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		.tmd {
+			width: 100%;
+			height: 100%;
+			background: pink;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			opacity: 0.5;
+		}
+		.show {
+			width: 60%;
+			height: 70%;
+			top: 10%;
+			left: 25%;
+			position: absolute;
+			
+
+		}
+	</style>
+</head>
+<body>
+	<img src="pic/1.jpg" width="280">
+	<img src="pic/2.jpg" width="280">
+	<img src="pic/3.jpg" width="280">
+	<img src="pic/4.jpg" width="280">
+	<img src="pic/5.jpg" width="280">
+	<img src="pic/6.jpg" width="280">
+	<img src="pic/7.jpg" width="280">
+	<img src="pic/8.jpg" width="280">
+	<img src="pic/9.jpg" width="280">
+	<img src="pic/10.jpg" width="280">
+	<img src="pic/11.jpg" width="280">
+	<img src="pic/12.jpg" width="280">
+	<img src="pic/13.jpg" width="280">
+	<img src="pic/14.jpg" width="280">
+	<img src="pic/15.jpg" width="280">
+	<img src="pic/16.jpg" width="280">
+	<img src="pic/17.jpg" width="280">
+	<img src="pic/18.jpg" width="280">
+	<img src="pic/19.jpg" width="280">
+	<img src="pic/20.jpg" width="280">
+	<img src="pic/21.jpg" width="280">
+	<img src="pic/22.jpg" width="280">
+	<img src="pic/23.jpg" width="280">
+	<img src="pic/24.jpg" width="280">
+	<img src="pic/25.jpg" width="280">
+	<img src="pic/26.jpg" width="280">
+	<img src="pic/27.jpg" width="280">
+	<img src="pic/28.jpg" width="280">
+	<img src="pic/29.jpg" width="280">
+	
+
+</body>
+	<script type="text/javascript">
+		var aImage = document.getElementsByTagName('img');
+		for (var i = 0; i < aImage.length; i++) {
+			aImage[i].onclick = function() {
+				//中间透明层
+				var oDiv = document.createElement('div');
+				oDiv.className = 'tmd';
+				document.body.appendChild(oDiv);
+				//显示图片
+				var oShowDiv = document.createElement('div');
+				oShowDiv.className = 'show';
+				document.body.appendChild(oShowDiv);
+			//创建图片img，然后把图片放到oShowDiv
+				var oImage = document.createElement('img');
+				oImage.src = this.src;
+				oImage.height = 500;
+				oImage.width = 400;
+				oImage.position = 'absolute';
+				oShowDiv.appendChild(oImage);
+			//写一个关闭两个字
+				var oSpan = document.createElement('span');
+				oSpan.innerHTML = '关闭';
+				oSpan.style.fontSize = '30px';
+				oShowDiv.appendChild(oSpan);
+				//删除背景和图片
+				oSpan.onclick = del;
+				oDiv.onclick = del;
+			};
+			function del ()
+			{
+				var oShowDiv = document.getElementsByClassName('show');
+				var oTmdiv = document.getElementsByClassName('tmd');
+				document.body.removeChild(oShowDiv[0]);
+				document.body.removeChild(oTmdiv[0]);
+			}
+		}
+	</script>
+</html>

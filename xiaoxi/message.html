@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<style>
+		#div{
+			margin: 0 auto;
+			text-align: center;
+		}
+		#table{
+			margin-top: 20px;
+		}
+		
+	</style>
+	<script type="text/javascript" src="ajax.js"></script>
+</head>
+<body>
+
+<h1 id="div">
+	
+	消息管理
+	
+</h1>
+	<table  border="1" align="center" style="margin:0 auto;width: 380px;">
+		<!-- <caption>消息管理</caption> -->
+		<tr>
+			<td>ID</td>
+			<td>opendId</td>
+			<td>内容</td>
+		</tr>
+	</table>
+	<table border="1" id="table" style="margin:0 auto;width: auto;">
+	</table>
+	<div id="page" align="center">
+		<a href="">首页</a>
+		<a href="">上一页</a>
+		<a href="">下一页</a>
+		<a href="">尾页</a>
+	</div>
+	<a href="http://ai.chenjiangjiang.cn/list.html">用户管理</a>
+	<a href="http://ai.chenjiangjiang.cn/hei.html">黑名单</a>
+	<a href="http://ai.chenjiangjiang.cn/xiaoxi/message.html">消息管理</a>
+	<a href="http://ai.chenjiangjiang.cn/up/up.html">上传文件</a>
+<!-- <h1><a href="http://ai.chenjiangjiang.cn/list.html">用户管理</a></h1> -->
+</body>
+<script type="text/javascript">
+	var oDiv = document.getElementById('div');
+	var oDiv1 = document.getElementById('div1');
+	var oSpan = document.getElementById('span');
+	var oTable = document.getElementById('table');
+	var oUname = document.getElementById('uname');
+	var oUclass = document.getElementById('uclass');
+	var oAdd = document.getElementById('add');
+	var id;
+
+	cha();
+
+	function cha()
+	{
+		ajax({
+			method:'get',
+			url:'message.php',
+			async:true,
+			data:{page:1},
+			success:success
+		});
+
+	}	
+
+		function success(data)
+		{
+			// alert(data);
+			oTable.innerHTML ='';
+			// console.log(data);
+			var obj = JSON.parse(data);
+			var shuju = obj.shuju;
+			//console.log(obj.length);
+			for (var i = 0; i < shuju.length; i++) {
+				 // console.log(shuju[i]);
+				var oBsc = document.createElement('button');
+				
+				var oTr = document.createElement('tr');
+
+				oBsc.innerHTML = '删除';
+				//oBxg.innerHTML = '修改';
+				oBsc.id = shuju[i].id;
+				//oBxg.id = data[i].id;
+				// alert(id);
+				oBsc.onclick = function ()
+				{
+					// alert(this.id);
+					var oDel = this.parentNode;
+					
+					oTable.removeChild(oDel);
+					shan(this.id);
+					cha();
+				}
+				oTr.innerHTML = '<td>'+shuju[i].id+'</td><td class = "uname">'+shuju[i].opendId+'</td><td>'+shuju[i].text+'</td>';
+				oTr.appendChild(oBsc);
+				//oTr.appendChild(oBxg);
+				oTable.appendChild(oTr);
+			}
+			var aA = document.getElementsByTagName('a');
+
+			var oPage =  obj.xi;
+			// console.log(oPage);
+			var i = 0;
+			for (var name in oPage) {
+				// console.log(name);
+				aA[i].href = 'javascript:fy(\''+oPage[name] +'\')';
+				i++;
+			}		
+		}
+
+		//上一页和下一页
+		function fy(url)
+		{
+			// console.log(url);
+			ajax({
+				method:'get',
+				url:url,
+				async:true,
+				data:null,
+				success:success
+			});
+		}
+	
+	
+	//删除
+	function shan(data1)
+	{
+		// alert(data);
+		// console.log(data);
+		ajax({
+			method:'get',
+			url:'messDel.php',
+			async:false,
+			data:{id:data1},
+			success:success
+		});
+		function success(data)
+		{
+			console.log(data);
+			// alert(data);
+			// cha();
+		}
+	}	
+</script>
+</html>
